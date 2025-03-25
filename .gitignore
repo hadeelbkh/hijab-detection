@@ -1,6 +1,7 @@
 data/
 models/
 data_with_bboxes/
+sample/
 __pycache__/
 *.pt
 *.pth
