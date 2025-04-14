@@ -10,7 +10,7 @@ class Config:
     MODEL_PATH = Path('model/')
     
     # Training hyperparameters
-    BATCH_SIZE = 32
+    BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
     EPOCHS = 20
     LEARNING_RATE = 1e-4
     WEIGHT_DECAY = 1e-5

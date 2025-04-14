@@ -4,19 +4,9 @@ from torch.nn import BCEWithLogitsLoss
 from src.config import Config
 from src.model import build_model
 from src.dataset import get_dataloaders
+from src.utils import load_checkpoint
 from sklearn.metrics import precision_recall_fscore_support
 import os
-
-def load_checkpoint(model, path):
-    """Load model state from a checkpoint."""
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Checkpoint not found: {path}")
-    # Load the checkpoint
-    checkpoint = torch.load(path, map_location=Config.DEVICE)
-    model.load_state_dict(checkpoint["model_state"])
-    print(f"Loaded checkpoint from epoch {checkpoint['epoch']}: {path}")
-    
-    return model
 
 def evaluate():
     """Evaluate the trained model on the test set."""

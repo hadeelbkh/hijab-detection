@@ -39,7 +39,7 @@ def train():
         # Initialize model, data, and optimizer
         model = build_model()
         try:
-            train_loader, val_loader = get_dataloaders()
+            train_loader, val_loader, _ = get_dataloaders()
         except Exception as e:
             raise RuntimeError(f"Failed to load data: {e}")
 

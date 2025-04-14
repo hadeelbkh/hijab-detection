@@ -72,9 +72,6 @@ class HijabDataset(Dataset):
 def get_dataloaders():
     """
     Creates and returns DataLoader objects for training, validation, and test datasets.
-
-    Returns:
-        dict: A dictionary containing DataLoader objects for 'train', 'val', and 'test'.
     """
     # Define transformations
     transform = transforms.Compose([
@@ -93,9 +90,5 @@ def get_dataloaders():
     val_loader = DataLoader(val_dataset, batch_size=Config.BATCH_SIZE, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=Config.BATCH_SIZE, shuffle=False)
 
-    # Return DataLoaders as a dictionary
-    return {
-        "train": train_loader,
-        "val": val_loader,
-        "test": test_loader
-    }
+    # Return DataLoaders
+    return train_loader, val_loader, test_loader
