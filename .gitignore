@@ -2,6 +2,7 @@ data/
 models/
 data_with_bboxes/
 sample/
+sample.zip/
 __pycache__/
 *.pt
 *.pth
