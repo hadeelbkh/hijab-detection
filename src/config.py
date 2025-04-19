@@ -5,8 +5,8 @@ from pathlib import Path
 
 class Config:
     # Paths
-    DATA_DIR = Path('sample/')
-    ## DATA_DIR = Path('data/')
+    ## DATA_DIR = Path('sample/')
+    DATA_DIR = Path('data/')
     MODEL_PATH = Path('model/')
     
     # Training hyperparameters
