@@ -6,4 +6,4 @@ sample.zip/
 sitr_data.zip/
 __pycache__/
 *.pt
-*.pth
+*.pthsitr_data.zip
