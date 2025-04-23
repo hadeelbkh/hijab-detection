@@ -3,6 +3,7 @@ models/
 data_with_bboxes/
 sample/
 sample.zip/
+data.zip/
 sitr_data.zip/
 __pycache__/
 *.pt
