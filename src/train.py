@@ -3,6 +3,7 @@ import torch
 from torch.optim import Adam
 from torch.nn import BCEWithLogitsLoss
 from torch.amp import GradScaler, autocast
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from src.config import Config
 from src.model import build_model
 from src.dataset import get_dataloaders
@@ -47,6 +48,11 @@ def train():
         criterion = BCEWithLogitsLoss()
         scaler = GradScaler('cuda')
         
+        # Added learning rate scheduler: ReduceLROnPlateau
+        # Reduces learning rate when validation loss plateaus
+        # factor=0.1: reduces lr by 10x; patience=3: waits 3 epochs; min_lr: prevents lr from going too low
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3, min_lr=1e-6, verbose=True)
+        
         best_val_loss = float("inf")
         patience = 5
         patience_counter = 0
@@ -75,10 +81,15 @@ def train():
                 raise RuntimeError(f"Training failed at epoch {epoch}: {e}")
 
             avg_train_loss = train_loss / len(train_loader)
-            print(f"Epoch {epoch+1}/{Config.EPOCHS}, Train Loss: {avg_train_loss:.4f}")
+            current_lr = optimizer.param_groups[0]['lr']
+            print(f"Epoch {epoch+1}/{Config.EPOCHS}, Train Loss: {avg_train_loss:.4f}, Learning Rate: {current_lr:.6f}")
 
             # Validation
             val_loss, val_acc = validate(model, val_loader, criterion)
+            # Added scheduler step: updates learning rate based on validation loss
+            # Must be called after validation to use the latest val_loss
+            scheduler.step(val_loss)
+            
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 patience_counter = 0

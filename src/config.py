@@ -17,7 +17,7 @@ class Config:
     DROPOUT = 0.5
     
     # Model architecture
-    MODEL_NAME = "resnet50"  # We can use: resnet50, mobilenetv2, efficientnet_b0
+    MODEL_NAME = "resnet50"  # We aim to test: resnet50, mobilenetv2, efficientnet_b0, destnet121
     
     # Device
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

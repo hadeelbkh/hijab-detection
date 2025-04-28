@@ -29,6 +29,13 @@ def build_model():
             nn.Dropout(p=Config.DROPOUT),
             nn.Linear(num_ftrs, 1)
         )
+    elif Config.MODEL_NAME == "densenet121":
+        model = models.densenet121(pretrained=True)
+        num_ftrs = model.classifier.in_features
+        model.classifier = nn.Sequential(
+            nn.Dropout(p=Config.DROPOUT),
+            nn.Linear(num_ftrs, 1)
+        )
     else:
         raise ValueError(f"Unsupported model: {Config.MODEL_NAME}")
 
