@@ -8,6 +8,7 @@ from src.config import Config
 from src.model import build_model
 from src.dataset import get_dataloaders
 from src.utils import save_checkpoint, validate
+from pathlib import Path
 import os
 
 def validate_config():
@@ -16,8 +17,9 @@ def validate_config():
         "LEARNING_RATE": float,
         "WEIGHT_DECAY": float,
         "EPOCHS": int,
-        "DEVICE": str,
-        "MODEL_PATH": str,
+        "DEVICE": torch.device,
+        "MODEL_PATH": (str, Path),
+        "DATA_DIR": (str, Path),
     }
     for attr, expected_type in required_attrs.items():
         if not hasattr(Config, attr):
@@ -25,11 +27,12 @@ def validate_config():
         value = getattr(Config, attr)
         if not isinstance(value, expected_type):
             raise TypeError(f"Config.{attr} must be {expected_type}, got {type(value)}")
-    if not os.path.isdir(Config.MODEL_PATH):
-        os.makedirs(Config.MODEL_PATH, exist_ok=True)
-        print(f"Created directory: {Config.MODEL_PATH}")
+    model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
+    if not os.path.isdir(model_path):
+        os.makedirs(model_path, exist_ok=True)
+        print(f"Created directory: {model_path}")
     # I'm using AMP so I'll check for CUDA
-    if "cuda" in Config.DEVICE.type and not torch.cuda.is_available():
+    if Config.DEVICE.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA device specified but not available")
 
 def train():

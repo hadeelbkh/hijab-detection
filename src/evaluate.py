@@ -6,6 +6,7 @@ from src.model import build_model
 from src.dataset import get_dataloaders
 from src.utils import load_checkpoint
 from sklearn.metrics import precision_recall_fscore_support
+from pathlib import Path
 import os
 
 def evaluate():
@@ -17,7 +18,9 @@ def evaluate():
 
         # Initialize model and load best checkpoint
         model = build_model()
-        best_model_path = os.path.join(Config.MODEL_PATH, "best_model.pt")
+        # Convert MODEL_PATH to str if Path object
+        model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
+        best_model_path = os.path.join(model_path, "best_model.pt")
         model = load_checkpoint(model, best_model_path)
         model.eval()
 

@@ -5,13 +5,14 @@ from pathlib import Path
 
 class Config:
     # Paths
-    ## DATA_DIR = Path('sample/')
-    DATA_DIR = Path('data/')
+    DATA_DIR = Path('sample/')
+    ## DATA_DIR = Path('data/')
     MODEL_PATH = Path('model/')
     
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
-    EPOCHS = 20
+    EPOCHS = 10 # for the sample data
+    # EPOCHS = 20
     LEARNING_RATE = 1e-4
     WEIGHT_DECAY = 1e-5
     DROPOUT = 0.5
