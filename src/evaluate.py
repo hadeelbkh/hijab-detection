@@ -8,9 +8,13 @@ from src.utils import load_checkpoint
 from sklearn.metrics import precision_recall_fscore_support
 from pathlib import Path
 import os
+import time
 
 def evaluate():
     """Evaluate the trained model on the test set."""
+    
+    start_time = time.time()
+    
     try:
         # Validate config
         from src.train import validate_config
@@ -68,6 +72,11 @@ def evaluate():
         print(f"  Recall: {recall:.4f}")
         print(f"  F1-Score: {f1:.4f}")
 
+        # Calculate and print testing time
+        end_time = time.time()
+        testing_time = end_time - start_time
+        print(f"Testing time: {testing_time:.2f} seconds")
+        
         return avg_test_loss, accuracy, precision, recall, f1
 
     except Exception as e:

@@ -10,6 +10,8 @@ from src.dataset import get_dataloaders
 from src.utils import save_checkpoint, validate
 from pathlib import Path
 import os
+import time
+import csv
 
 def validate_config():
     """Validate Config attributes."""
@@ -36,6 +38,13 @@ def validate_config():
         raise RuntimeError("CUDA device specified but not available")
 
 def train():
+    start_time = time.time()
+    
+    # Initialize CSV file
+    model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
+    csv_file = os.path.join(model_path, "metrics.csv")
+    csv_headers = ["epoch", "train_loss", "val_loss", "learning_rate", "val_accuracy"]
+    
     try:
         # Validate config
         validate_config()
@@ -93,6 +102,21 @@ def train():
             # Must be called after validation to use the latest val_loss
             scheduler.step(val_loss)
             
+            # Log metrics to CSV
+            csv_row = {
+                "epoch": epoch + 1,
+                "train_loss": avg_train_loss,
+                "val_loss": val_loss,
+                "learning_rate": current_lr,
+                "val_accuracy": val_acc
+            }
+            file_exists = os.path.exists(csv_file)
+            with open(csv_file, 'a', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=csv_headers)
+                if not file_exists:
+                    writer.writeheader()
+                writer.writerow(csv_row)
+                
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 patience_counter = 0
@@ -104,6 +128,13 @@ def train():
             if patience_counter >= patience:
                 print("Early stopping triggered")
                 break
+        
+        print(f"Saved metrics to {csv_file}")
+        
+        # Calculate and print training time
+        end_time = time.time()
+        training_time = end_time - start_time
+        print(f"Training time: {training_time:.2f} seconds")
 
     except Exception as e:
         print(f"Training terminated due to error: {e}")
