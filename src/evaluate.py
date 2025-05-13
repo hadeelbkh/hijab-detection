@@ -1,14 +1,15 @@
-# test.py
+# evaluate.py
 import torch
 from torch.nn import BCEWithLogitsLoss
 from src.config import Config
 from src.model import build_model
 from src.dataset import get_dataloaders
-from src.utils import load_checkpoint
+from src.utils import load_checkpoint, validate
 from sklearn.metrics import precision_recall_fscore_support
 from pathlib import Path
 import os
 import time
+import csv
 
 def evaluate():
     """Evaluate the trained model on the test set."""
@@ -38,46 +39,44 @@ def evaluate():
 
         # Evaluation
         criterion = BCEWithLogitsLoss()
-        test_loss = 0.0
-        correct = 0
-        total = 0
-        all_preds = []
-        all_labels = []
-
-        with torch.no_grad():  
-            for images, labels in test_loader:
-                images = images.to(Config.DEVICE)
-                labels = labels.to(Config.DEVICE).float().view(-1, 1)
-
-                outputs = model(images)
-                loss = criterion(outputs, labels)
-                test_loss += loss.item()
-
-                preds = torch.sigmoid(outputs) > 0.5 # Convert logits to binary predictions
-                correct += (preds == labels).sum().item() # Count correct predictions
-                total += labels.size(0) # Total number of samples
-                all_preds.extend(preds.cpu().numpy()) # Store predictions
-                all_labels.extend(labels.cpu().numpy()) # Store true labels
-
-        # Compute metrics
-        avg_test_loss = test_loss / len(test_loader) 
-        accuracy = correct / total if total > 0 else 0.0 
-        precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='binary')
-
-        # Report results
-        print(f"Test Results:")
-        print(f"  Loss: {avg_test_loss:.4f}")
-        print(f"  Accuracy: {accuracy:.4f}")
-        print(f"  Precision: {precision:.4f}")
-        print(f"  Recall: {recall:.4f}")
-        print(f"  F1-Score: {f1:.4f}")
+        test_metrics = validate(model, test_loader, criterion, dataset_name="Test")
+        test_loss, test_acc, test_precision, test_recall, test_f1, test_TP, test_TN, test_FP, test_FN = test_metrics
 
         # Calculate and print testing time
         end_time = time.time()
         testing_time = end_time - start_time
         print(f"Testing time: {testing_time:.2f} seconds")
         
-        return avg_test_loss, accuracy, precision, recall, f1
+        # Log metrics to CSV
+        csv_file = os.path.join(model_path, "test_metrics.csv")
+        csv_data = [
+            {"Metric": "Test Loss", "Value": f"{test_loss:.4f}"},
+            {"Metric": "Test Accuracy", "Value": f"{test_acc:.4f}"},
+            {"Metric": "Precision", "Value": f"{test_precision:.4f}"},
+            {"Metric": "Recall", "Value": f"{test_recall:.4f}"},
+            {"Metric": "F1-Score", "Value": f"{test_f1:.4f}"},
+            {"Metric": "Confusion Matrix", "Value": ""},
+            {"Metric": "True Positives (TP)", "Value": test_TP},
+            {"Metric": "False Positives (FP)", "Value": test_FP},
+            {"Metric": "True Negatives (TN)", "Value": test_TN},
+            {"Metric": "False Negatives (FN)", "Value": test_FN}
+        ]
+        with open(csv_file, 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=["Metric", "Value"])
+            writer.writeheader()
+            writer.writerows(csv_data)
+        print(f"Saved test metrics to {csv_file}")
+
+        # Report results
+        print(f"Test Results:")
+        print(f"  Loss: {test_loss:.4f}")
+        print(f"  Accuracy: {test_acc:.4f}")
+        print(f"  Precision: {test_precision:.4f}")
+        print(f"  Recall: {test_recall:.4f}")
+        print(f"  F1-Score: {test_f1:.4f}")
+        print(f"  Confusion Matrix: TP={test_TP}, TN={test_TN}, FP={test_FP}, FN={test_FN}")
+
+        return test_loss, test_acc, test_precision, test_recall, test_f1, test_TP, test_TN, test_FP, test_FN
 
     except Exception as e:
         print(f"Testing failed: {e}")

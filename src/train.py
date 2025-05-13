@@ -12,6 +12,8 @@ from pathlib import Path
 import os
 import time
 import csv
+import numpy as np
+from sklearn.metrics import precision_recall_fscore_support, confusion_matrix
 
 def validate_config():
     """Validate Config attributes."""
@@ -42,8 +44,12 @@ def train():
     
     # Initialize CSV file
     model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
-    csv_file = os.path.join(model_path, "metrics.csv")
-    csv_headers = ["epoch", "train_loss", "val_loss", "learning_rate", "val_accuracy"]
+    csv_file = os.path.join(model_path, "train_val_metrics.csv")
+    csv_headers = [
+            "epoch", "train_loss", "val_loss", "learning_rate",
+            "train_TP", "train_TN", "train_FP", "train_FN", "train_acc", "train_precision", "train_recall", "train_fscore",
+            "val_TP", "val_TN", "val_FP", "val_FN", "val_acc", "val_precision", "val_recall", "val_fscore"
+    ]
     
     try:
         # Validate config
@@ -71,7 +77,16 @@ def train():
 
         for epoch in range(Config.EPOCHS):
             model.train()
-            train_loss = 0.0
+            train_loss = 0.
+            train_correct = 0
+            train_total = 0
+            train_TP = 0
+            train_TN = 0
+            train_FP = 0
+            train_FN = 0
+            all_train_preds = []
+            all_train_labels = []
+            
             try:
                 for images, labels in train_loader:
                     images = images.to(Config.DEVICE)
@@ -81,8 +96,22 @@ def train():
                     with autocast('cuda'):
                         outputs = model(images)
                         loss = criterion(outputs, labels)
-                    train_loss += loss.item()
-
+                    train_loss += loss.item() * images.size(0)
+                    
+                    preds = torch.sigmoid(outputs) > 0.5
+                    train_correct += (preds == labels).sum().item()
+                    train_total += labels.size(0)
+                    batch_preds = preds.cpu().numpy().flatten()
+                    batch_labels = labels.cpu().numpy().flatten()
+                    cm = confusion_matrix(batch_labels, batch_preds)
+                    TN, FP, FN, TP = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
+                    train_TP += TP
+                    train_TN += TN
+                    train_FP += FP
+                    train_FN += FN
+                    all_train_preds.extend(batch_preds)
+                    all_train_labels.extend(batch_labels)
+                    
                     # Backpropagation with mixed precision
                     optimizer.zero_grad()
                     scaler.scale(loss).backward()
@@ -92,12 +121,20 @@ def train():
             except Exception as e:
                 raise RuntimeError(f"Training failed at epoch {epoch}: {e}")
 
-            avg_train_loss = train_loss / len(train_loader)
+            avg_train_loss = train_loss / train_total
+            train_acc = train_correct / train_total if train_total > 0 else 0.0
+            train_precision, train_recall, train_f1, _ = precision_recall_fscore_support(
+                all_train_labels, all_train_preds, average='binary', zero_division=0
+            )
             current_lr = optimizer.param_groups[0]['lr']
-            print(f"Epoch {epoch+1}/{Config.EPOCHS}, Train Loss: {avg_train_loss:.4f}, Learning Rate: {current_lr:.6f}")
-
+            print(f"Epoch {epoch+1}/{Config.EPOCHS}, Train Loss: {avg_train_loss:.4f}, "
+                f"Accuracy: {train_acc:.4f}, Precision: {train_precision:.4f}, Recall: {train_recall:.4f}, "
+                f"F1-Score: {train_f1:.4f}, TP: {train_TP}, TN: {train_TN}, FP: {train_FP}, FN: {train_FN}, "
+                f"Learning Rate: {current_lr:.6f}")
+        
             # Validation
-            val_loss, val_acc = validate(model, val_loader, criterion)
+            val_metrics = validate(model, val_loader, criterion, dataset_name="Validation")
+            val_loss, val_acc, val_precision, val_recall, val_f1, val_TP, val_TN, val_FP, val_FN = val_metrics
             # Added scheduler step: updates learning rate based on validation loss
             # Must be called after validation to use the latest val_loss
             scheduler.step(val_loss)
@@ -108,7 +145,22 @@ def train():
                 "train_loss": avg_train_loss,
                 "val_loss": val_loss,
                 "learning_rate": current_lr,
-                "val_accuracy": val_acc
+                "train_TP": train_TP,
+                "train_TN": train_TN,
+                "train_FP": train_FP,
+                "train_FN": train_FN,
+                "train_acc": train_acc,
+                "train_precision": train_precision,
+                "train_recall": train_recall,
+                "train_fscore": train_f1,
+                "val_TP": val_TP,
+                "val_TN": val_TN,
+                "val_FP": val_FP,
+                "val_FN": val_FN,
+                "val_acc": val_acc,
+                "val_precision": val_precision,
+                "val_recall": val_recall,
+                "val_fscore": val_f1
             }
             file_exists = os.path.exists(csv_file)
             with open(csv_file, 'a', newline='') as f:
@@ -128,8 +180,6 @@ def train():
             if patience_counter >= patience:
                 print("Early stopping triggered")
                 break
-        
-        print(f"Saved metrics to {csv_file}")
         
         # Calculate and print training time
         end_time = time.time()
