@@ -11,7 +11,7 @@ import os
 import time
 import csv
 
-def evaluate():
+def evaluate(run_id=None):
     """Evaluate the trained model on the test set."""
     
     start_time = time.time()
@@ -19,12 +19,12 @@ def evaluate():
     try:
         # Validate config
         from src.train import validate_config
-        validate_config()
+        model_path = validate_config(run_id)
 
         # Initialize model and load best checkpoint
         model = build_model()
         # Convert MODEL_PATH to str if Path object
-        model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
+        # model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
         best_model_path = os.path.join(model_path, "best_model.pt")
         model = load_checkpoint(model, best_model_path)
         model.eval()
@@ -39,7 +39,7 @@ def evaluate():
 
         # Evaluation
         criterion = BCEWithLogitsLoss()
-        test_metrics = validate(model, test_loader, criterion, dataset_name="Test")
+        test_metrics = validate(model, test_loader, criterion, dataset_name=f"Test Run {run_id}")
         test_loss, test_acc, test_precision, test_recall, test_f1, test_TP, test_TN, test_FP, test_FN = test_metrics
 
         # Calculate and print testing time
@@ -48,7 +48,7 @@ def evaluate():
         print(f"Testing time: {testing_time:.2f} seconds")
         
         # Log metrics to CSV
-        csv_file = os.path.join(model_path, "test_metrics.csv")
+        csv_file = os.path.join(model_path, f"test_metrics_run_{run_id}.csv")
         csv_data = [
             {"Metric": "Test Loss", "Value": f"{test_loss:.4f}"},
             {"Metric": "Test Accuracy", "Value": f"{test_acc:.4f}"},
@@ -68,15 +68,15 @@ def evaluate():
         print(f"Saved test metrics to {csv_file}")
 
         # Report results
-        print(f"Test Results:")
-        print(f"  Loss: {test_loss:.4f}")
-        print(f"  Accuracy: {test_acc:.4f}")
-        print(f"  Precision: {test_precision:.4f}")
-        print(f"  Recall: {test_recall:.4f}")
-        print(f"  F1-Score: {test_f1:.4f}")
-        print(f"  Confusion Matrix: TP={test_TP}, TN={test_TN}, FP={test_FP}, FN={test_FN}")
+        #print(f"Test Results:")
+        #print(f"  Loss: {test_loss:.4f}")
+        #print(f"  Accuracy: {test_acc:.4f}")
+        #print(f"  Precision: {test_precision:.4f}")
+        #print(f"  Recall: {test_recall:.4f}")
+        #print(f"  F1-Score: {test_f1:.4f}")
+        #print(f"  Confusion Matrix: TP={test_TP}, TN={test_TN}, FP={test_FP}, FN={test_FN}")
 
-        return test_loss, test_acc, test_precision, test_recall, test_f1, test_TP, test_TN, test_FP, test_FN
+        return test_metrics
 
     except Exception as e:
         print(f"Testing failed: {e}")

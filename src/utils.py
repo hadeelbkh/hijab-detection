@@ -4,20 +4,26 @@ import torch
 from src.config import Config
 from sklearn.metrics import precision_recall_fscore_support, confusion_matrix
 import numpy as np
+from pathlib import Path
 
-def save_checkpoint(model, optimizer, epoch, is_best=False):
+def save_checkpoint(model, optimizer, epoch, is_best=False, run_id=None):
     """Save model and optimizer state to a checkpoint file."""
+    print(run_id)
     try:
         checkpoint = {
             "epoch": epoch,
             "model_state": model.state_dict(),
             "optimizer_state": optimizer.state_dict(),
         }
-        path = os.path.join(Config.MODEL_PATH, f"checkpoint_epoch_{epoch}.pt")
+        model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
+        if run_id:
+            print(f"Saving checkpoint for run {run_id}")
+            model_path = os.path.join(model_path, f"run_{run_id}")
+        path = os.path.join(model_path, f"checkpoint_epoch_{epoch}.pt")
         torch.save(checkpoint, path)
         print(f"Checkpoint saved at epoch {epoch}: {path}")
         if is_best:
-            best_path = os.path.join(Config.MODEL_PATH, "best_model.pt")
+            best_path = os.path.join(model_path, "best_model.pt")
             torch.save(checkpoint, best_path)
             print(f"Best model saved: {best_path}")
     except Exception as e:
@@ -70,7 +76,7 @@ def validate(model, data_loader, criterion, dataset_name="Validation"):
     cm = confusion_matrix(all_labels, all_preds)
     TN, FP, FN, TP = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
 
-    print(f"{dataset_name} - Loss: {avg_loss:.4f}, Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, "
-        f"Recall: {recall:.4f}, F1-Score: {f1:.4f}, TP: {TP}, TN: {TN}, FP: {FP}, FN: {FN}")
+    #print(f"{dataset_name} - Loss: {avg_loss:.4f}, Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, "
+    #    f"Recall: {recall:.4f}, F1-Score: {f1:.4f}, TP: {TP}, TN: {TN}, FP: {FP}, FN: {FN}")
 
     return avg_loss, accuracy, precision, recall, f1, TP, TN, FP, FN
