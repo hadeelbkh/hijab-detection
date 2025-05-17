@@ -8,7 +8,6 @@ from pathlib import Path
 
 def save_checkpoint(model, optimizer, epoch, is_best=False, run_id=None):
     """Save model and optimizer state to a checkpoint file."""
-    print(run_id)
     try:
         checkpoint = {
             "epoch": epoch,

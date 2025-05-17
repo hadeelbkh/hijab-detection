@@ -5,10 +5,10 @@ from pathlib import Path
 
 class Config:
     # Paths
-    DATA_DIR = Path('sample/')
-    ## DATA_DIR = Path('data/')
-    MODEL_PATH = Path('model/')
-    
+    ## DATA_DIR = Path('sample/')
+    DATA_DIR = Path('/content/drive/MyDrive/hijab-detection/content/data/')
+    MODEL_PATH = Path('/content/drive/MyDrive/hijab-detection/model/')
+    NUM_RUNS = 1
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
     EPOCHS = 10 # for the sample data

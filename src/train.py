@@ -46,7 +46,7 @@ def validate_config(run_id=None):
 def train():
     """Train the model."""
     
-    num_runs = 5
+    num_runs = Config.NUM_RUNS
     for run_id in range(1, num_runs+1):
         print(f"Starting run {run_id}/{num_runs}")
         start_time = time.time()
