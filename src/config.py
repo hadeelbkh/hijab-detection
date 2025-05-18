@@ -6,13 +6,12 @@ from pathlib import Path
 class Config:
     # Paths
     ## DATA_DIR = Path('sample/')
-    DATA_DIR = Path('/content/drive/MyDrive/hijab-detection/content/data/')
+    DATA_DIR = Path('/content/drive/MyDrive/hijab-detection/sitr_data/')
     MODEL_PATH = Path('/content/drive/MyDrive/hijab-detection/model/')
     NUM_RUNS = 1
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
-    EPOCHS = 10 # for the sample data
-    # EPOCHS = 20
+    EPOCHS = 20
     LEARNING_RATE = 1e-4
     WEIGHT_DECAY = 1e-5
     DROPOUT = 0.5
