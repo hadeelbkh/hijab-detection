@@ -17,7 +17,7 @@ def save_checkpoint(model, optimizer, epoch, is_best=False, run_id=None):
         model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
         if run_id:
             print(f"Saving checkpoint for run {run_id}")
-            model_path = os.path.join(model_path, f"run_{run_id}")
+            model_path = os.path.join(model_path, f"{Config.MODEL_NAME}_run_{run_id}")
         path = os.path.join(model_path, f"checkpoint_epoch_{epoch}.pt")
         torch.save(checkpoint, path)
         print(f"Checkpoint saved at epoch {epoch}: {path}")

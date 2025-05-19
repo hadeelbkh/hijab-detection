@@ -34,7 +34,7 @@ def validate_config(run_id=None):
             raise TypeError(f"Config.{attr} must be {expected_type}, got {type(value)}")
     model_path = str(Config.MODEL_PATH) if isinstance(Config.MODEL_PATH, Path) else Config.MODEL_PATH
     if run_id:
-        model_path = os.path.join(model_path, f"run_{run_id}")
+        model_path = os.path.join(model_path, f"{Config.MODEL_NAME}_run_{run_id}")
     if not os.path.isdir(model_path):
         os.makedirs(model_path, exist_ok=True)
         print(f"Created directory: {model_path}")
@@ -77,7 +77,7 @@ def train():
             # Added learning rate scheduler: ReduceLROnPlateau
             # Reduces learning rate when validation loss plateaus
             # factor=0.1: reduces lr by 10x; patience=3: waits 3 epochs; min_lr: prevents lr from going too low
-            scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3, min_lr=1e-6, verbose=True)
+            # scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3, min_lr=1e-6, verbose=True)
             
             best_val_loss = float("inf")
             patience = 5
@@ -146,7 +146,7 @@ def train():
                 val_loss, val_acc, val_precision, val_recall, val_f1, val_TP, val_TN, val_FP, val_FN = val_metrics
                 # Added scheduler step: updates learning rate based on validation loss
                 # Must be called after validation to use the latest val_loss
-                scheduler.step(val_loss)
+                # scheduler.step(val_loss)
                 
                 # Save metrics
                 csv_rows.append({

@@ -6,8 +6,9 @@ from pathlib import Path
 class Config:
     # Paths
     ## DATA_DIR = Path('sample/')
+    MODEL_NAME = "densenet121"  # We aim to test: resnet50, mobilenetv2, efficientnet_b0, densenet121
     DATA_DIR = Path('/content/drive/MyDrive/hijab-detection/sitr_data/')
-    MODEL_PATH = Path('/content/drive/MyDrive/hijab-detection/model/')
+    MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/{MODEL_NAME}/")
     NUM_RUNS = 1
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
@@ -17,7 +18,7 @@ class Config:
     DROPOUT = 0.5
     
     # Model architecture
-    MODEL_NAME = "resnet50"  # We aim to test: resnet50, mobilenetv2, efficientnet_b0, destnet121
+    # MODEL_NAME = "mobilenetv2"  # We aim to test: resnet50, mobilenetv2, efficientnet_b0, densenet121
     
     # Device
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
