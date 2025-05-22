@@ -13,7 +13,7 @@ def run_training(num_runs=4, model_name=None):
     try:
         from src.config import Config
         Config.MODEL_NAME = model_name
-        Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/{model_name}/")
+        Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/eca_{model_name}/")
         Config.NUM_RUNS = num_runs
         train()
     except Exception as e:
