@@ -8,7 +8,7 @@ class Config:
     ## DATA_DIR = Path('sample/')
     MODEL_NAME = "densenet121"  # We aim to test: resnet50, mobilenetv2, efficientnet_b0, densenet121
     DATA_DIR = Path('/content/drive/MyDrive/hijab-detection/sitr_data/')
-    MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/{MODEL_NAME}/")
+    MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/tuned-densenet121/")
     NUM_RUNS = 1
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
