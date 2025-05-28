@@ -13,7 +13,7 @@ def run_training(num_runs=4, model_name=None):
     try:
         from src.config import Config
         Config.MODEL_NAME = model_name
-        Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/{model_name}/")
+        Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/models/{model_name}/")
         Config.NUM_RUNS = num_runs
         train()
     except Exception as e:
@@ -21,7 +21,7 @@ def run_training(num_runs=4, model_name=None):
 
 def plot_loss_curves(num_plots=4, model_name=None):
 
-    Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/model/{model_name}/")
+    Config.MODEL_PATH = Path(f"/content/drive/MyDrive/hijab-detection/models/{model_name}/")
     
     # Load metrics from CSV
     for run_id in range(1, num_plots+1):
