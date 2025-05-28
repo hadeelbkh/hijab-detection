@@ -49,32 +49,27 @@ def evaluate(run_id=None):
         
         # Log metrics to CSV
         csv_file = os.path.join(model_path, f"test_metrics_run_{run_id}.csv")
-        csv_data = [
-            {"Metric": "Test Loss", "Value": f"{test_loss:.4f}"},
-            {"Metric": "Test Accuracy", "Value": f"{test_acc:.4f}"},
-            {"Metric": "Precision", "Value": f"{test_precision:.4f}"},
-            {"Metric": "Recall", "Value": f"{test_recall:.4f}"},
-            {"Metric": "F1-Score", "Value": f"{test_f1:.4f}"},
-            {"Metric": "Confusion Matrix", "Value": ""},
-            {"Metric": "True Positives (TP)", "Value": test_TP},
-            {"Metric": "False Positives (FP)", "Value": test_FP},
-            {"Metric": "True Negatives (TN)", "Value": test_TN},
-            {"Metric": "False Negatives (FN)", "Value": test_FN}
+        csv_headers = [
+            "test_loss", "test_accuracy", "test_precision", "test_recall", "test_f1",
+            "test_TP", "test_TN", "test_FP", "test_FN"
         ]
+
+        csv_data = [{
+            "test_loss": test_loss,
+            "test_accuracy": test_acc,
+            "test_precision": test_precision,
+            "test_recall": test_recall,
+            "test_f1": test_f1
+        }]
         with open(csv_file, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["Metric", "Value"])
+            writer = csv.DictWriter(f, fieldnames=csv_headers)
             writer.writeheader()
             writer.writerows(csv_data)
         print(f"Saved test metrics to {csv_file}")
 
         # Report results
-        #print(f"Test Results:")
-        #print(f"  Loss: {test_loss:.4f}")
-        #print(f"  Accuracy: {test_acc:.4f}")
-        #print(f"  Precision: {test_precision:.4f}")
-        #print(f"  Recall: {test_recall:.4f}")
-        #print(f"  F1-Score: {test_f1:.4f}")
-        #print(f"  Confusion Matrix: TP={test_TP}, TN={test_TN}, FP={test_FP}, FN={test_FN}")
+        print(f"Test Results:")
+        print(f"Loss: {test_loss:.4f}, Accuracy: {test_acc:.4f}, F1-Score: {test_f1:.4f}")
 
         return test_metrics
 
