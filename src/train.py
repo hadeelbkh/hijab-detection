@@ -55,9 +55,9 @@ def train():
         model_path = validate_config(run_id)
         csv_file = os.path.join(model_path, f"train_val_metrics_run_{run_id}.csv")
         csv_headers = [
-                "epoch", "train_loss", "val_loss", "learning_rate",
-                "train_TP", "train_TN", "train_FP", "train_FN", "train_acc", "train_precision", "train_recall", "train_fscore",
-                "val_TP", "val_TN", "val_FP", "val_FN", "val_acc", "val_precision", "val_recall", "val_fscore"
+                "epoch", "learning_rate", "train_loss", "train_acc", "train_precision", "train_recall", "train_fscore",
+                "val_loss", "val_acc", "val_precision", "val_recall", "val_fscore", 
+                "train_TP", "train_TN", "train_FP", "train_FN", "val_TP", "val_TN", "val_FP", "val_FN"
         ]
         
         csv_rows = []
@@ -136,14 +136,14 @@ def train():
                 )
                 current_lr = optimizer.param_groups[0]['lr']
                 print(f"Epoch {epoch+1}/{Config.EPOCHS}")
-                # print(f"Epoch {epoch+1}/{Config.EPOCHS}, Train Loss: {avg_train_loss:.4f}, "
-                #    f"Accuracy: {train_acc:.4f}, Precision: {train_precision:.4f}, Recall: {train_recall:.4f}, "
-                #    f"F1-Score: {train_f1:.4f}, TP: {train_TP}, TN: {train_TN}, FP: {train_FP}, FN: {train_FN}, "
-                #    f"Learning Rate: {current_lr:.6f}")
+                print("Train Results:")
+                print(f"Loss: {avg_train_loss:.4f}, Accuracy: {train_acc:.4f}, F1: {train_f1:.4f}")
                 
                 # Validation
                 val_metrics = validate(model, val_loader, criterion, dataset_name=f"Validation Run {run_id}")
                 val_loss, val_acc, val_precision, val_recall, val_f1, val_TP, val_TN, val_FP, val_FN = val_metrics
+                print("Val Results:")
+                print(f"Loss: {val_loss:.4f}, Accuracy: {val_acc:.4f}, F1: {val_f1:.4f}")
                 # Added scheduler step: updates learning rate based on validation loss
                 # Must be called after validation to use the latest val_loss
                 # scheduler.step(val_loss)
@@ -151,25 +151,25 @@ def train():
                 # Save metrics
                 csv_rows.append({
                     "epoch": epoch + 1,
-                    "train_loss": avg_train_loss,
-                    "val_loss": val_loss,
                     "learning_rate": current_lr,
-                    "train_TP": train_TP,
-                    "train_TN": train_TN,
-                    "train_FP": train_FP,
-                    "train_FN": train_FN,
+                    "train_loss": avg_train_loss,
                     "train_acc": train_acc,
                     "train_precision": train_precision,
                     "train_recall": train_recall,
                     "train_fscore": train_f1,
-                    "val_TP": val_TP,
-                    "val_TN": val_TN,
-                    "val_FP": val_FP,
-                    "val_FN": val_FN,
+                    "val_loss": val_loss,
                     "val_acc": val_acc,
                     "val_precision": val_precision,
                     "val_recall": val_recall,
-                    "val_fscore": val_f1
+                    "val_fscore": val_f1,
+                    "train_TP": train_TP,
+                    "train_TN": train_TN,
+                    "train_FP": train_FP,
+                    "train_FN": train_FN,
+                    "val_TP": val_TP,
+                    "val_TN": val_TN,
+                    "val_FP": val_FP,
+                    "val_FN": val_FN    
                 })
                     
                 if val_loss < best_val_loss:
