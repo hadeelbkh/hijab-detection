@@ -32,7 +32,8 @@ def predict_single_image(model, image_path):
         return {
             "image": os.path.basename(image_path),
             "prediction": prediction,
-            "confidence": confidence
+            "confidence": confidence,
+            "probability": prob
         }
     except Exception as e:
         print(f"Error predicting {image_path}: {e}")
@@ -64,18 +65,21 @@ def main(image_path=None, image_dir=None):
                 print(f"Image: {result['image']}")
                 print(f"Prediction: {result['prediction']}")
                 print(f"Confidence: {result['confidence']:.4f}")
+                print(f"Probability: {result['probability']:.4f}")
         elif image_dir:
             results = predict_batch_images(model, image_dir)
             for result in results:
                 print(f"Image: {result['image']}")
                 print(f"Prediction: {result['prediction']}")
                 print(f"Confidence: {result['confidence']:.4f}")
+                print(f"Probability: {result['probability']:.4f}")
         else:
             print("Please provide an image path or directory.")
     except Exception as e:
         print(f"Inference failed: {e}")
+    return None
 
 if __name__ == "__main__":
-    # main(image_path="path/to/single_image.jpg")
+    main(image_path="/content/drive/MyDrive/hijab-detection/hijabigirl.jpg")
     # main(image_dir="path/to/image_folder/")
-    pass
+    
