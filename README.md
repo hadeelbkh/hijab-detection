@@ -103,9 +103,14 @@ drive.mount('/content/drive')
 ## Usage
 ### Training the Model
 
-1. **Run the Training Script:**
+1. **Imoprt run_traning from utils_colab:**
 ```
-python src/train.py
+from src.utils_colab import run_training
+```
+
+2. **Call run_training on the densenet121 model with X runs:**
+```
+run_training(num_runs=4, model_name="densenet121")
 ```
 
 - This trains the DenseNet121 model and saves the best checkpoint as `data/model/densenet121/densenet121_run_{run_id}/best_model.pt`.
@@ -122,7 +127,7 @@ python src/train.py
 
 ## Evaluating the Model
 
-- The Evaluation Script will be called while src/train.py is running, after each run finishes training
+- The Evaluation Script will be called while `src/train.py` is running, after each run finishes training
 - This evaluates the model on the test set and saves metrics to `model/densenet121/densenet121_run_{run_id}/test_metrics_{run_id}.csv`.
 
 ### Inference on a Single Image
@@ -133,7 +138,7 @@ python src/train.py
 
 2. **Run Inference:**
 ```
-python inference.py
+!python /content/drive/MyDrive/hijab-detection/inference.py
 ```
 
 Edit `inference.py` to set the image path:
@@ -143,11 +148,12 @@ main(image_path="images/hijabigirl.jpg")
 
 ### Batch Inference
 
-- Use the Colab script provided in the project to evaluate a batch of images:
+- Edit `inference.py` to set the images directory to evaluate a batch of images:
 ```
 image_dir = "/content/drive/MyDrive/hijab-detection/images/"
 ground_truths = {
     "hijabigirl.jpg": "Hijab",
+    "nonhijabigirl.jpg": "No Hijab"
 }
 batch_results = evaluate_batch_images(image_dir, ground_truths)
 ```
@@ -156,7 +162,7 @@ batch_results = evaluate_batch_images(image_dir, ground_truths)
 ## File Structure
 ```
 hijab-detection/
-├── images/                   # Directory for inference images
+├── images/                  # Directory for inference images
 ├── model/
 │   └── densenet121/         # Model checkpoints and metrics
 ├── sitr_data/               # Corrected dataset directory
@@ -169,9 +175,11 @@ hijab-detection/
 │   ├── model.py            # Model architecture
 │   ├── train.py            # Training script
 │   ├── evaluate.py         # Evaluation script
-│   └── utils.py            # Utility functions
+│   ├── utils.py            # Utility functions
+│   └── utils_colab.py      # Run training and plotting in Colab
 ├── inference.py            # Inference script for single images
-└── README.md               # Project documentation
+├── README.md               # Project documentation
+└── requirements.txt
 ```
 
 ## Results
