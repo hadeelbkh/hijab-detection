@@ -97,7 +97,7 @@ drive.mount('/content/drive')
 
 4. **Prepare Dataset:**
 
-- Ensure the `sitr_data/` directory is in `/content/drive/MyDrive/hijab-detection/sitr_data/`.
+    - Ensure the `sitr_data/` directory is in `/content/drive/MyDrive/hijab-detection/sitr_data/`.
 
 
 ## Usage
@@ -153,15 +153,12 @@ batch_results = evaluate_batch_images(image_dir, ground_truths)
 ```
 
 
-File Structure
+## File Structure
 ```
 hijab-detection/
-├── data/
-│   ├── images/              # Directory for inference images
-│   └── model/
-│       └── densenet121/     # Model checkpoints and metrics
-│           ├── best_model.pt
-│           └── test_metrics_run1.csv
+├── images/                   # Directory for inference images
+├── model/
+│   └── densenet121/         # Model checkpoints and metrics
 ├── sitr_data/               # Corrected dataset directory
 │   ├── train/
 │   ├── val/
