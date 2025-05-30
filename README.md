@@ -40,16 +40,16 @@ Labels are specified in the XML files, where the `<name>` tag indicates:
 
 ## Prerequisites
 
-- Python: Version 3.8 or higher.
-- Dependencies:
+- **Python**: Version 3.8 or higher.
+- **Dependencies**:
     - `torch`
     - `torchvision`
     - `pandas`
     - `scikit-learn`
     - `pillow`
 
-- Hardware: GPU recommended for faster training (e.g., Google Colab with GPU runtime).
-- Dataset: The corrected dataset in sitr_data/ as described above.
+- **Hardware**: GPU recommended for faster training (e.g., Google Colab with GPU runtime).
+- **Dataset**: The corrected dataset in `sitr_data/` as described above.
 
 ## Setup Instructions
 ### Local Setup (Windows/Linux)
@@ -114,9 +114,10 @@ python src/train.py
 2. **Hyperparameters:**
 
 - Edit `src/config.py` to adjust:
-    - `BATCH_SIZE`: 8
+    - `BATCH_SIZE`: 4
     - `EPOCHS`: 20
-    - `LEARNING_RATE`: 1e-4
+    - `LEARNING_RATE`: 1e-5
+    - `WEIGHT_DECAY` = 1e-6
     - `DROPOUT`: 0.5
 
 Evaluating the Model
@@ -153,7 +154,7 @@ batch_results = evaluate_batch_images(image_dir, ground_truths)
 
 
 File Structure
-"""
+```
 hijab-detection/
 ├── data/
 │   ├── images/              # Directory for inference images
@@ -174,31 +175,31 @@ hijab-detection/
 │   └── utils.py            # Utility functions
 ├── inference.py            # Inference script for single images
 └── README.md               # Project documentation
-"""
+```
 
 ## Results
 
 - **Test Metrics:**
 
-    - Test Loss: 0.39371
-    - Test Accuracy: 90.57%
-    - Test Precision: 0.8413
-    - Test Recall: 0.8508
-    - Test F1-Score: 0.8460
+    - **Test Loss:** 0.39371
+    - **Test Accuracy:** 90.57%
+    - **Test Precision:** 0.8413
+    - **Test Recall:** 0.8508
+    - **Test F1-Score:** 0.8460
 
 - **Validation Metrics:**
 
-    - Validation Loss: 0.01723
-    - Validation Accuracy: 98.41%
-    - Validation F1-Score: 0.9818
+    - **Validation Loss:** 0.01723
+    - **Validation Accuracy:** 98.41%
+    - **Validation F1-Score:** 0.9818
 
 
-Single Image Example:
+- **Single Image Example:**
 
-Image: `hijabigirl.jpg`
-Prediction: Hijab
-Confidence: 0.9954
-Probability: 0.0046
+    - **Image:** `hijabigirl.jpg`
+    - **Prediction:** Hijab
+    - **Confidence:** 0.9954
+    - **Probability:** 0.0046
 
 
 ## Contributing
