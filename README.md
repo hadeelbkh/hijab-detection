@@ -125,7 +125,7 @@ run_training(num_runs=4, model_name="densenet121")
         - `WEIGHT_DECAY` = 1e-6
         - `DROPOUT`: 0.3
 
-## Evaluating the Model
+### Evaluating the Model
 
 - The Evaluation Script will be called while `src/train.py` is running, after each run finishes training
 - This evaluates the model on the test set and saves metrics to `model/densenet121/densenet121_run_{run_id}/test_metrics_{run_id}.csv`.
