@@ -72,8 +72,8 @@ pip install torch torchvision pandas scikit-learn pillow
 
 3. **Prepare Dataset:**
 
-- Ensure the `sitr_data/` directory is in the project root with the structure mentioned above.
-- Images should be in `.jpg` format, each accompanied by an XML annotation file.
+    - Ensure the `sitr_data/` directory is in the project root with the structure mentioned above.
+    - Images should be in `.jpg` format, each accompanied by an XML annotation file.
 
 
 
@@ -81,7 +81,7 @@ pip install torch torchvision pandas scikit-learn pillow
 
 1. **Upload to Google Drive:**
 
-- Upload the `hijab-detection` directory to your Google Drive (e.g., `/content/drive/MyDrive/hijab-detection/`).
+    - Upload the `hijab-detection` directory to your Google Drive (e.g., `/content/drive/MyDrive/hijab-detection/`).
 
 2. **Mount Google Drive:In a Colab notebook:**
 ```
@@ -113,14 +113,14 @@ python src/train.py
 
 2. **Hyperparameters:**
 
-- Edit `src/config.py` to adjust:
-    - `BATCH_SIZE`: 4
-    - `EPOCHS`: 20
-    - `LEARNING_RATE`: 1e-5
-    - `WEIGHT_DECAY` = 1e-6
-    - `DROPOUT`: 0.5
+    - Edit `src/config.py` to adjust:
+        - `BATCH_SIZE`: 4
+        - `EPOCHS`: 20
+        - `LEARNING_RATE`: 1e-5
+        - `WEIGHT_DECAY` = 1e-6
+        - `DROPOUT`: 0.5
 
-Evaluating the Model
+## Evaluating the Model
 
 - The Evaluation Script will be called while src/train.py is running, after each run finishes training
 - This evaluates the model on the test set and saves metrics to `model/densenet121/densenet121_run_{run_id}/test_metrics_{run_id}.csv`.
@@ -129,7 +129,7 @@ Evaluating the Model
 
 1. **Prepare an Image:**
 
-- Place the image (e.g., `hijabigirl.jpg`) in `images/`.
+    - Place the image (e.g., `hijabigirl.jpg`) in `images/`.
 
 2. **Run Inference:**
 ```
