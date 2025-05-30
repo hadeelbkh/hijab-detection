@@ -116,7 +116,7 @@ run_training(num_runs=4, model_name="densenet121")
 - This trains the DenseNet121 model and saves the best checkpoint as `data/model/densenet121/densenet121_run_{run_id}/best_model.pt`.
 - Training logs and metrics are saved in `model/densenet121/densenet121_run_{run_id}`.
 
-2. **Hyperparameters:**
+3. **Hyperparameters:**
 
     - Edit `src/config.py` to adjust:
         - `BATCH_SIZE`: 4
