@@ -123,7 +123,7 @@ run_training(num_runs=4, model_name="densenet121")
         - `EPOCHS`: 20
         - `LEARNING_RATE`: 1e-5
         - `WEIGHT_DECAY` = 1e-6
-        - `DROPOUT`: 0.5
+        - `DROPOUT`: 0.3
 
 ## Evaluating the Model
 
