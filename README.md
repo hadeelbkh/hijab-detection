@@ -150,14 +150,8 @@ main(image_path="images/hijabigirl.jpg")
 
 - Edit `inference.py` to set the images directory to evaluate a batch of images:
 ```
-image_dir = "/content/drive/MyDrive/hijab-detection/images/"
-ground_truths = {
-    "hijabigirl.jpg": "Hijab",
-    "nonhijabigirl.jpg": "No Hijab"
-}
-batch_results = evaluate_batch_images(image_dir, ground_truths)
+main(image_dir="images/")
 ```
-
 
 ## File Structure
 ```
