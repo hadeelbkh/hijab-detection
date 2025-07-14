@@ -38,13 +38,20 @@ def build_model():
             nn.Linear(num_ftrs, 1)
         )
     elif Config.MODEL_NAME == "densenet121":
-        model = models.densenet121(weights=DenseNet121_Weights.DEFAULT)
+        model = models.densenet121(weights=models.DenseNet121_Weights.DEFAULT)
         num_ftrs = model.classifier.in_features
-        # Add ECA layers after each dense block
-        for i, layer in enumerate(model.features):
-            if layer.__class__.__name__ == "DenseBlock":
-                eca = ECALayer(channel=model.features[i].num_features, k_size=Config.ECA_KERNEL_SIZE)
-                model.features.add_module(f'eca_after_denseblock{i+1}', eca)
+
+        # نبني features جديدة ونضيف ECA بعد كل denseblock
+        new_features = nn.Sequential()
+        for name, layer in model.features._modules.items():
+            new_features.add_module(name, layer)
+            if "denseblock" in name:
+                last_dense = list(layer.children())[-1]
+                out_channels = last_dense.norm2.num_features
+                new_features.add_module(f"eca_after_{name}", ECALayer(channel=out_channels))
+
+        model.features = new_features
+
         model.classifier = nn.Sequential(
             nn.Dropout(p=Config.DROPOUT),
             nn.Linear(num_ftrs, 1)
