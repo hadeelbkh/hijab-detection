@@ -15,11 +15,12 @@ class Config:
     NUM_RUNS = 4  # Number of training runs to perform
     # Training hyperparameters
     BATCH_SIZE = 8  # 32 is too large for Google Colab’s free GPU
+    LEARNING_RATE = 1e-4
     WEIGHT_DECAY = 1e-5
     DROPOUT = 0.5
     # BATCH_SIZE = 4  # 32 is too large for Google Colab’s free GPU
     EPOCHS = 20
-    LEARNING_RATE = 1e-5
+    # LEARNING_RATE = 1e-5
     # WEIGHT_DECAY = 1e-6
     # DROPOUT = 0.3
     
