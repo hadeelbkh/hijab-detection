@@ -1,9 +1,15 @@
 # Hijab Detection Project
+
+📄 **Paper:** M. Obaid, H. Bkhaitan, D. Maali, S. Hammad, T. Thaher, *An Identity-Aware Privacy-Preserving Deep Learning Framework for Culturally Sensitive Image Sharing*, IJACSA 17(4), 909–919, 2026. ([link](https://thesai.org/Publications/ViewPaper?Volume=17&Issue=4&Code=IJACSA&SerialNo=88))
+
+🤗 **Model:** [hadeelbkh/sitr-hijab-densenet121](https://huggingface.co/hadeelbkh/sitr-hijab-densenet121) · **Dataset (gated):** [hadeelbkh/sitr-hijab-dataset](https://huggingface.co/datasets/hadeelbkh/sitr-hijab-dataset) · **Demo:** [hadeelbkh/sitr-hijab-detection](https://huggingface.co/spaces/hadeelbkh/sitr-hijab-detection)
 ## Overview
 This project implements a hijab detection system using deep learning. It uses a DenseNet121 model, fine-tuned for binary classification to detect whether an individual is wearing a hijab in an image. The labels are defined as:
 
 - `0`: Hijab present
 - `1`: No hijab present
+
+The model outputs a single logit; `sigmoid(logit)` is the probability of class `1` (**no hijab**).
 
 The project includes scripts for training, evaluation, inference on single images, and batch processing. It was developed and tested using Google Colab, with data stored locally and on Google Drive.
 
@@ -178,19 +184,14 @@ hijab-detection/
 
 ## Results
 
-- **Test Metrics:**
+Final model (tuned DenseNet121, released on Hugging Face) on the 880-image test set.
+Precision, recall and F1 are for the positive class `1 = no hijab`:
 
-    - **Test Loss:** 0.39371
-    - **Test Accuracy:** 90.57%
-    - **Test Precision:** 0.8413
-    - **Test Recall:** 0.8508
-    - **Test F1-Score:** 0.8460
+| Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|
+| 92.16% | 91.63% | 81.72% | 86.39% | 0.967 |
 
-- **Validation Metrics:**
-
-    - **Validation Loss:** 0.01723
-    - **Validation Accuracy:** 98.41%
-    - **Validation F1-Score:** 0.9818
+See the [model card](https://huggingface.co/hadeelbkh/sitr-hijab-densenet121) for per-class results, the confusion matrix and the trade-offs at different thresholds.
 
 
 - **Single Image Example:**
@@ -198,7 +199,7 @@ hijab-detection/
     - **Image:** `hijabigirl.jpg`
     - **Prediction:** Hijab
     - **Confidence:** 0.9954
-    - **Probability:** 0.0046
+    - **Probability (of no hijab):** 0.0046
 
 
 ## Contributing
@@ -207,7 +208,21 @@ hijab-detection/
 - For issues, create a new issue on the GitHub repository.
 
 ## License
-This project is licensed under the MIT License.
+The code is licensed under the MIT License. The dataset is derived from the Roboflow [Hijab Dataset by Team S](https://universe.roboflow.com/team-s/hijab-dataset-nw57d/dataset/4) and is released under CC BY 4.0.
+
+## Citation
+```bibtex
+@article{obaid2026sitr,
+  title   = {An Identity-Aware Privacy-Preserving Deep Learning Framework for Culturally Sensitive Image Sharing},
+  author  = {Obaid, Mahmoud and Bkhaitan, Hadeel and Maali, Duha and Hammad, Saja and Thaher, Thaer},
+  journal = {International Journal of Advanced Computer Science and Applications},
+  volume  = {17},
+  number  = {4},
+  pages   = {909--919},
+  year    = {2026},
+  doi     = {10.14569/IJACSA.2026.0170488}
+}
+```
 
 ## Acknowledgments
 
