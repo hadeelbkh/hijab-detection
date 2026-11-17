@@ -2,12 +2,9 @@
 
 📄 **Paper:** M. Obaid, H. Bkhaitan, D. Maali, S. Hammad, T. Thaher, *An Identity-Aware Privacy-Preserving Deep Learning Framework for Culturally Sensitive Image Sharing*, IJACSA 17(4), 909–919, 2026. ([link](https://thesai.org/Publications/ViewPaper?Volume=17&Issue=4&Code=IJACSA&SerialNo=88))
 
-🤗 **Model:** [hadeelbkh/sitr-hijab-densenet121](https://huggingface.co/hadeelbkh/sitr-hijab-densenet121) · 
-
-**Dataset (gated):** [hadeelbkh/sitr-hijab-dataset](https://huggingface.co/datasets/hadeelbkh/sitr-hijab-dataset) · 
-
+🤗 **Model:** [hadeelbkh/sitr-hijab-densenet121](https://huggingface.co/hadeelbkh/sitr-hijab-densenet121)
+**Dataset (gated):** [hadeelbkh/sitr-hijab-dataset](https://huggingface.co/datasets/hadeelbkh/sitr-hijab-dataset)
 **Demo:** [hadeelbkh/sitr-hijab-detection](https://huggingface.co/spaces/hadeelbkh/sitr-hijab-detection)
-
 
 ## Overview
 This project implements a hijab detection system using deep learning. It uses a DenseNet121 model, fine-tuned for binary classification to detect whether an individual is wearing a hijab in an image. The labels are defined as:
