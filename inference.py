@@ -26,8 +26,10 @@ def predict_single_image(model, image_path):
         image = image.to(Config.DEVICE)
         with torch.no_grad():
             output = model(image)
+            # The model's single logit is for class 1 = "No Hijab" (class 0 = "Hijab"),
+            # so sigmoid(output) is the probability that NO hijab is present.
             prob = torch.sigmoid(output).item()
-            prediction = "Hijab" if prob > 0.5 else "No Hijab"
+            prediction = "No Hijab" if prob > 0.5 else "Hijab"
             confidence = prob if prob > 0.5 else 1 - prob
         return {
             "image": os.path.basename(image_path),
